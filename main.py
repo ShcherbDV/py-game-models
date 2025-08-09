@@ -13,17 +13,21 @@ def main() -> None:
 
         race_info = player.get("race", {})
         race_name = race_info.get("name")
+        if not race_name:
+            print(f"Skipping player {nickname} due to missing race name.")
+            continue
         race_description = race_info.get("description")
 
-        guild = player.get("guild")
-        if guild:
-            guild_name = guild.get("name")
-            guild_description = guild.get("description")
-            guild, created = Guild.objects.get_or_create(
+        guild_info = player.get("guild")
+        guild = None
+        if guild_info:
+            guild_name = guild_info.get("name")
+            guild_description = guild_info.get("description")
+            guild, _ = Guild.objects.get_or_create(
                 name=guild_name, defaults={"description": guild_description}
             )
 
-        race, created = Race.objects.get_or_create(
+        race, _ = Race.objects.get_or_create(
             name=race_name, defaults={"description": race_description}
         )
 
